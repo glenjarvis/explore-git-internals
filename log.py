@@ -31,9 +31,11 @@ def check_base_case(cwd, potential):
             "directories): .git")
 
 
-def git_root(cwd):
-    """Return the full path to the .git"""
+def git_root(cwd=None):
+    """Return the full path to the .git directory"""
 
+    if cwd is None:
+        cwd = os.getcwd()
     git_dir = os.path.join(cwd, ".git")
 
     if os.path.exists(git_dir):
@@ -47,7 +49,7 @@ def big_head(root=None):
     """Return contents of git HEAD variable"""
 
     if root is None:
-        root = git_root(os.getcwd())
+        root = git_root()
 
     with open(os.path.join(root, "HEAD"), "r") as head_file:
         head = head_file.read().strip()
@@ -55,5 +57,33 @@ def big_head(root=None):
     return head
 
 
-print(big_head())
+def parse_head(head_contents):
+    """Given contents of HEAD, return file path to branch head file
 
+    Example head_contents include:
+      ref: refs/heads/master
+
+    Given the above example, the following would be returned:
+      .git/refs/heads/master
+    """
+
+    if head_contents.startswith("ref: "):
+        return head_contents.replace("ref: ", "", 1)
+    else:
+        return head_contents
+
+
+def branch_head_filename():
+    """Return the full path to the branch filename pointed to by HEAD"""
+
+    return os.path.join(git_root(), parse_head(big_head()))
+
+def branch_head():
+    """Return commit being referenced by branch referenced by HEAD"""
+
+    with open(branch_head_filename(), "r") as branch_head_file:
+        head = branch_head_file.read().strip()
+
+    return head
+
+print(branch_head())
