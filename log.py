@@ -42,4 +42,18 @@ def git_root(cwd):
         check_base_case(cwd, git_dir)
         return git_root(os.path.dirname(cwd))
 
-print(git_root(os.getcwd()))
+
+def big_head(root=None):
+    """Return contents of git HEAD variable"""
+
+    if root is None:
+        root = git_root(os.getcwd())
+
+    with open(os.path.join(root, "HEAD"), "r") as head_file:
+        head = head_file.read().strip()
+
+    return head
+
+
+print(big_head())
+
