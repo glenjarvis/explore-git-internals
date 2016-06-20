@@ -12,6 +12,11 @@ single file.
 
 
 import os
+from pprint import pprint
+import subprocess
+
+from commit import ParsedCommit
+
 
 class GitError(RuntimeError):
     """A Git Error Exception"""
@@ -78,6 +83,7 @@ def branch_head_filename():
 
     return os.path.join(git_root(), parse_head(big_head()))
 
+
 def branch_head():
     """Return commit being referenced by branch referenced by HEAD"""
 
@@ -86,4 +92,18 @@ def branch_head():
 
     return head
 
-print(branch_head())
+
+def get_commit_contents(commit):
+    """Return commit cotents for commit"""
+
+    output = subprocess.check_output(["git", "cat-file", "-p", commit])
+    return ParsedCommit(output)
+
+
+def git_log():
+    """Eqiuvalent of `git log`"""
+    current = branch_head()
+    pprint(get_commit_contents(current))
+
+
+git_log()
