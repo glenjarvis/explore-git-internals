@@ -17,11 +17,17 @@ Example raw commit:
 
 >>> from commit import ParsedCommit
 >>> ParsedCommit(raw_commit)
-{'committer': 'Glen Jarvis <glen@glenjarvis.com> 1465164241 -0700',
- 'message': 'Merge pull request #4 from glenjarvis/get_branch_commit',
- 'tree': '0ea3ee5e56e3123de49422ac3315b1cee3d74910',
+
+{'author': 'Glen Jarvis <glen@glenjarvis.com>',
+ 'author_datetime': datetime.datetime(2016, 6, 5, 15, 4, 1,
+     tzinfo=<StaticTzInfo 'Etc/GMT+7'>),
+ 'committer': 'Glen Jarvis <glen@glenjarvis.com>',
+ 'committer_datetime': datetime.datetime(2016, 6, 5, 15, 4, 1,
+     tzinfo=<StaticTzInfo 'Etc/GMT+7'>),
+ 'message': 'Merge pull request #4 from glenjarvis/get_branch_commit\n\n
+             Get commit pointed to by branch pointed to by HEAD',
  'parent': '39f0875dfc705ced8250155e61801554198e0d5f',
- 'author': 'Glen Jarvis <glen@glenjarvis.com> 1465164241 -0700'}
+ 'tree': '0ea3ee5e56e3123de49422ac3315b1cee3d74910'}
 """
 
 import datetime
