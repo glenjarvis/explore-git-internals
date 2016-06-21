@@ -90,13 +90,14 @@ class ParsedCommit(dict):
     GPGSIG_HEADER_STATE = 2
     MESSAGE_TEXT_STATE = 3
 
-    def __init__(self, raw_commit):
+    def __init__(self, raw_commit, sha):
         self.message = []
         self.gpgsig = []
         self.raw_commit = raw_commit
         dict.__init__(self)
         self.current_state = self.HEADERS_STATE
         self.parse_commit()
+        self["commit"] = sha
 
     def start_gpg_parse(self, line):
         """Take gpg start line from raw commit, fix state

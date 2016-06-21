@@ -12,7 +12,6 @@ single file.
 
 
 import os
-from pprint import pprint
 import subprocess
 
 from commit import ParsedCommit
@@ -97,13 +96,27 @@ def get_commit_contents(commit):
     """Return commit cotents for commit"""
 
     output = subprocess.check_output(["git", "cat-file", "-p", commit])
-    return ParsedCommit(output)
+    return ParsedCommit(output, commit)
+
+
+def print_formatted_commit(commit):
+    """Print commit in roughly same format Git does by default"""
+
+    print "commit {0}".format(commit["commit"])
+    print "Author:\t{0}".format(commit["author"])
+    print "Date:\t{0}".format(commit["author_datetime"])
+    print "\n"
+    for line in commit["message"].split("\n"):
+        print "    {0}".format(line)
+    print "\n"
 
 
 def git_log():
     """Eqiuvalent of `git log`"""
-    current = branch_head()
-    pprint(get_commit_contents(current))
+    current = get_commit_contents(branch_head())
+    while "parent" in current:
+        current = get_commit_contents(current["parent"])
+        print_formatted_commit(current)
 
 
 git_log()
