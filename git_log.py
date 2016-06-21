@@ -1,5 +1,13 @@
+#!/usr/bin/env python
+
 """
-Module to parse raw commit messages
+Supporting code for the "Explore Git internals using Python"
+talk:
+
+http://www.meetup.com/silicon-valley-python/events/228160092/
+
+For simplicity in presentation of the code, we will keep these in a
+single file.
 
 The ParsedCommit class is provided and it is a subclass of dictionary.
 This allows one to take the raw format of a commit and process it as in
@@ -15,7 +23,7 @@ Example raw commit:
 >
 > Merge pull request #4 from glenjarvis/get_branch_commit
 
->>> from commit import ParsedCommit
+>>> from git_log import ParsedCommit
 >>> ParsedCommit(raw_commit)
 
 {'author': 'Glen Jarvis <glen@glenjarvis.com>',
@@ -28,10 +36,24 @@ Example raw commit:
              Get commit pointed to by branch pointed to by HEAD',
  'parent': '39f0875dfc705ced8250155e61801554198e0d5f',
  'tree': '0ea3ee5e56e3123de49422ac3315b1cee3d74910'}
+
+
+You can copy this single file to any location. Although, you may need to
+ensure you have any packages installed not supplied by the standard
+library.
+
+If you wish to use this as a command, ensure the PATH environment
+variable points to the directory where this is contained. For example if
+this is placed in the $HOME/bin directory and one is using the bash
+shell:
+
+export PATH=$HOME/bin:$PATH
 """
 
 import datetime
+import os
 import pytz
+import subprocess
 
 
 def swap_sign(sign):
@@ -72,6 +94,10 @@ def zone_from_offset(offset_string):
     hour = offset_string[1:3]
     return pytz.timezone("Etc/GMT{0}{1}".format(swap_sign(sign),
                                                 int(hour)))
+
+
+class GitError(RuntimeError):
+    """A Git Error Exception"""
 
 
 class ParsedCommit(dict):
@@ -226,3 +252,105 @@ class ParsedCommit(dict):
         self["message"] = "\n".join(self.message)
         self.update_timestamps()
         return self
+
+
+def check_base_case(cwd, potential):
+    """Stop looking if .git not found at /
+
+    Check the current working directory (cwd) to see if it is at the
+    root of the filesystem. If it is, and there is not a .git directory
+    there, then we have reached the top of the heirarchy and have to
+    stop looking.
+    """
+    if cwd == "/" and not os.path.exists(potential):
+        raise GitError(
+            "fatal: Not a git repository (or any of the parent " +
+            "directories): .git")
+
+
+def git_root(cwd=None):
+    """Return the full path to the .git directory"""
+
+    if cwd is None:
+        cwd = os.getcwd()
+    git_dir = os.path.join(cwd, ".git")
+
+    if os.path.exists(git_dir):
+        return git_dir
+    else:
+        check_base_case(cwd, git_dir)
+        return git_root(os.path.dirname(cwd))
+
+
+def big_head(root=None):
+    """Return contents of git HEAD variable"""
+
+    if root is None:
+        root = git_root()
+
+    with open(os.path.join(root, "HEAD"), "r") as head_file:
+        head = head_file.read().strip()
+
+    return head
+
+
+def parse_head(head_contents):
+    """Given contents of HEAD, return file path to branch head file
+
+    Example head_contents include:
+      ref: refs/heads/master
+
+    Given the above example, the following would be returned:
+      .git/refs/heads/master
+    """
+
+    if head_contents.startswith("ref: "):
+        return head_contents.replace("ref: ", "", 1)
+    else:
+        return head_contents
+
+
+def branch_head_filename():
+    """Return the full path to the branch filename pointed to by HEAD"""
+
+    return os.path.join(git_root(), parse_head(big_head()))
+
+
+def branch_head():
+    """Return commit being referenced by branch referenced by HEAD"""
+
+    with open(branch_head_filename(), "r") as branch_head_file:
+        head = branch_head_file.read().strip()
+
+    return head
+
+
+def get_commit_contents(commit):
+    """Return commit cotents for commit"""
+
+    output = subprocess.check_output(["git", "cat-file", "-p", commit])
+    return ParsedCommit(output, commit)
+
+
+def print_formatted_commit(commit):
+    """Print commit in roughly same format Git does by default"""
+
+    print "commit {0}".format(commit["commit"])
+    print "Author:\t{0}".format(commit["author"])
+    print "Date:\t{0}".format(commit["author_datetime"])
+    print "\n"
+    for line in commit["message"].split("\n"):
+        print "    {0}".format(line)
+    print "\n"
+
+
+def git_log():
+    """Eqiuvalent of `git log`"""
+    current = get_commit_contents(branch_head())
+    while "parent" in current:
+        current = get_commit_contents(current["parent"])
+        print_formatted_commit(current)
+
+
+if __name__ == "__main__":
+    git_log()
