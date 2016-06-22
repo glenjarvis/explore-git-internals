@@ -56,6 +56,10 @@ import pytz
 import subprocess
 
 
+# E.g.: Tue Jun 21 00:57:59 2016 -0700
+DATE_FORMAT = "%a %b %d %H:%M:%S %Y %z"
+
+
 def swap_sign(sign):
     """Given a sign (+ or -), return opposite"""
 
@@ -337,7 +341,7 @@ def print_formatted_commit(commit):
 
     print "commit {0}".format(commit["commit"])
     print "Author:\t{0}".format(commit["author"])
-    print "Date:\t{0}".format(commit["author_datetime"])
+    print "Date:\t{0}".format(commit["author_datetime"].strftime(DATE_FORMAT))
     print "\n"
     for line in commit["message"].split("\n"):
         print "    {0}".format(line)
