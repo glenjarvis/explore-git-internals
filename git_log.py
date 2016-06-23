@@ -14,11 +14,7 @@ single file.
 
 
 import os
-from pprint import pprint
 import subprocess
-
-from commit import ParsedCommit
-
 
 
 class GitError(RuntimeError):
@@ -100,13 +96,14 @@ def get_commit_contents(commit):
     """Return commit cotents for commit"""
 
     output = subprocess.check_output(["git", "cat-file", "-p", commit])
-    return ParsedCommit(output)
+    return output.split("\n")
 
 
 def git_log():
     """Eqiuvalent of `git log`"""
     current = branch_head()
-    pprint(get_commit_contents(current))
+    for line in get_commit_contents(current):
+        print line
 
 
 git_log()
