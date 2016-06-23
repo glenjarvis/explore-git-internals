@@ -26,9 +26,9 @@ def check_base_case(cwd, potential):
     stop looking.
     """
     if cwd == "/" and not os.path.exists(potential):
-        raise GitError(
-            "fatal: Not a git repository (or any of the parent " +
-            "directories): .git")
+        print("fatal: Not a git repository (or any of the parent " +
+              "directories): .git")
+        exit(128)
 
 
 def git_root(cwd):
