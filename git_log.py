@@ -354,6 +354,7 @@ def print_formatted_commit(commit):
 def git_log():
     """Eqiuvalent of `git log`"""
     current = get_commit_contents(branch_head())
+    print_formatted_commit(current)
     while "parent" in current:
         current = get_commit_contents(current["parent"])
         print_formatted_commit(current)
