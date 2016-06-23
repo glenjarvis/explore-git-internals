@@ -79,6 +79,14 @@ This is a collaboration between Silicon Valley Python MeeetUp [9] and the Bay Ar
 
 https://docs.google.com/presentation/d/1d1x2FsYEGsmZ662USFCloG4Aad1rXaXdvFHWgFu-clY/edit?usp=sharing
 
+
+## Questions
+
+If you are at the talk on 23-June, you can ask questions here and I will see them:
+
+goo.gl/slides/r399s2
+
+
 ## Videos
 
 There are currently no video recordings for this talk. When recordings are made, references will be made here.
