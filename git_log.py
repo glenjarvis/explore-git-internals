@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Allow print() to have parethesis:
+# pylint: disable=C0325
 
 """
 Supporting code for the "Explore Git internals using Python"
@@ -12,6 +14,7 @@ single file.
 
 
 import os
+
 
 class GitError(RuntimeError):
     """A Git Error Exception"""
