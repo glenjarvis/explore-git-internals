@@ -84,7 +84,7 @@ https://docs.google.com/presentation/d/1d1x2FsYEGsmZ662USFCloG4Aad1rXaXdvFHWgFu-
 
 If you are at the talk on 23-June, you can ask questions here and I will see them:
 
-https://goo.gl/slides/r399s2
+https://goo.gl/slides/wrmz2t
 
 
 ## Videos
