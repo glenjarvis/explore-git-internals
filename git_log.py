@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Allow print() to have parethesis:
+# pylint: disable=C0325
 
 """
 Supporting code for the "Explore Git internals using Python"
@@ -98,6 +100,7 @@ def zone_from_offset(offset_string):
     hour = offset_string[1:3]
     return pytz.timezone("Etc/GMT{0}{1}".format(swap_sign(sign),
                                                 int(hour)))
+
 
 
 class GitError(RuntimeError):
@@ -267,9 +270,9 @@ def check_base_case(cwd, potential):
     stop looking.
     """
     if cwd == "/" and not os.path.exists(potential):
-        raise GitError(
-            "fatal: Not a git repository (or any of the parent " +
-            "directories): .git")
+        print("fatal: Not a git repository (or any of the parent " +
+              "directories): .git")
+        exit(128)
 
 
 def git_root(cwd=None):
