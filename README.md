@@ -87,8 +87,6 @@ If you are at the talk on 23-June, you can ask questions here and I will see the
 goo.gl/slides/r399s2
 
 
-https://docs.google.com/presentation/d/1d1x2FsYEGsmZ662USFCloG4Aad1rXaXdvFHWgFu-clY/edit?usp=sharing
-
 ## Videos
 
 There are currently no video recordings for this talk. When recordings are made, references will be made here.
