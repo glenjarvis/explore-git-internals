@@ -80,3 +80,37 @@ https://docs.google.com/presentation/d/1d1x2FsYEGsmZ662USFCloG4Aad1rXaXdvFHWgFu-
 June, 2016: Bay Area Python Interest Group (BayPIGgies): http://baypiggies.net
   https://www.youtube.com/watch?v=CB9p8n3gugM
 
+## Disclaimer
+
+The code in this repository was meant to be a toy example. I should have
+embraced that and ignored handing gpg signatures when parsing the commit (we do
+successfully handle that case but it added complexity).
+
+We did not, however, handle the complexity of properly handling all history for
+merges. We naively just picked one parent (even if there were two like one
+would see in a merge). This means we skip one branch of history. In other
+words, imagine this scenario into a new directory:
+
+```
+mkdir git_demo
+cd git_demo
+git init
+touch 1
+git add 1
+git commit -m "Add 1"
+git branch branch1
+touch 2
+git add 2
+git commit -m "Add 2"
+git checkout branch1
+touch 3
+git add 3
+git commit -m "Add 3"
+git checkout master
+git merge branch1
+git log
+```
+
+Then the "Add 2" commit wouldn't be shown in the history even though all files
+would be present. This is currently intentional. I only wish I was disciplined
+enough to also ignore the GPG case (which I did handle).
