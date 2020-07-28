@@ -106,7 +106,7 @@ git checkout branch1
 touch 3
 git add 3
 git commit -m "Add 3"
-git checkout master
+git checkout main
 git merge branch1
 git log
 ```

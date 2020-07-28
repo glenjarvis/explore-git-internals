@@ -305,10 +305,10 @@ def parse_head(head_contents):
     """Given contents of HEAD, return file path to branch head file
 
     Example head_contents include:
-      ref: refs/heads/master
+      ref: refs/heads/main
 
     Given the above example, the following would be returned:
-      .git/refs/heads/master
+      .git/refs/heads/main
     """
 
     if head_contents.startswith("ref: "):
